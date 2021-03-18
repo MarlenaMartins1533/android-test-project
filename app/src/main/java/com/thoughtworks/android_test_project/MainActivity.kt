@@ -11,6 +11,9 @@ import java.util.Calendar.*
 class MainActivity : AppCompatActivity() {
 
     private var bookingRequest: BookingRequest = BookingRequest()
+    lateinit var checkInDate: Calendar
+    lateinit var checkOutDate: Calendar
+
     private val hotelList: List<Hotel> = mutableListOf(
             Hotel("Parque das flores", 3, "R$110", "R$80", "R$90", "R$80"),
             Hotel("Jardim Botânico", 4, "R$160", "R$110", "R$60", "R$50"),
@@ -21,6 +24,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        checkInDate = getInstance()
+        checkOutDate = getInstance()
+
+        checkInCalendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            checkInDate.set(year, month, dayOfMonth)
+            checkInCalendarView.date = checkInDate.timeInMillis
+        }
+
+        checkOutCalendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            checkOutDate.set(year, month, dayOfMonth)
+            checkOutCalendarView.date = checkOutDate.timeInMillis
+        }
+
         bestPricesButton.setOnClickListener {
             bookingRequest = BookingRequest(rewardSwitch.isChecked, 0, 0)
             val hotel: Hotel = getBestHotel()
@@ -29,8 +45,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getBestHotel(): Hotel {
-        val checkInDate: Calendar = getDateFrom(checkInCalendarView)
-        val checkOutDate: Calendar = getDateFrom(checkOutCalendarView)
+        checkInDate.timeInMillis = checkInCalendarView.date
+        checkOutDate.timeInMillis = checkOutCalendarView.date
 
         var dateAux = checkInDate
         var firstDay: Int = checkInDate.get(DAY_OF_MONTH)
