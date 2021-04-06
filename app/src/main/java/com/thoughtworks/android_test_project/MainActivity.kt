@@ -43,9 +43,6 @@ class MainActivity : AppCompatActivity() {
         var currentDate: Calendar = checkInDate
         var currentHotelValue: Double
 
-        var minHotelValue = calcHotelValue(0)
-        var minHotel = 0
-
         currentDate.timeInMillis = checkInDate.timeInMillis
 
         for (i in checkInDate.get(DAY_OF_YEAR)..checkOutDate.get(DAY_OF_YEAR)){
@@ -57,6 +54,9 @@ class MainActivity : AppCompatActivity() {
                 else -> bookingRequest.totalWeekdays++
             }
         }
+
+        var minHotelValue = calcHotelValue(0)
+        var minHotel = 0
 
         for(i in hotelList.indices){
             currentHotelValue = calcHotelValue(i)
@@ -74,17 +74,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calcHotelValue(position: Int): Double{
-        var weekends = 0.0
-        var weekdays = 0.0
+        var weekendsValue = 0.0
+        var weekdaysValue = 0.0
 
         if(bookingRequest.loyalty){
-            weekdays = hotelList[position].loyaltyWeekday * bookingRequest.totalWeekdays
-            weekends = hotelList[position].loyaltyWeekend * bookingRequest.totalWeekends
+            weekdaysValue = hotelList[position].loyaltyWeekday * bookingRequest.totalWeekdays
+            weekendsValue = hotelList[position].loyaltyWeekend * bookingRequest.totalWeekends
         } else{
-            weekdays = hotelList[position].regularWeekday * bookingRequest.totalWeekdays
-            weekends = hotelList[position].regularWeekend * bookingRequest.totalWeekends
+            weekdaysValue = hotelList[position].regularWeekday * bookingRequest.totalWeekdays
+            weekendsValue = hotelList[position].regularWeekend * bookingRequest.totalWeekends
         }
-        return weekdays + weekends
+        return weekdaysValue + weekendsValue
     }
 
     private fun showBestPrice(name: String) = Toast.makeText(this, name, Toast.LENGTH_LONG).show()
